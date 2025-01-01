@@ -1,0 +1,7 @@
+{
+    "watchDirectory": "./watch",
+    "backupDirectory": "./backup",
+    "binaryOutputDirectory": "./bin",
+    "logFilePath": "./log.txt",
+    "backupRetentionDays": 14
+}
