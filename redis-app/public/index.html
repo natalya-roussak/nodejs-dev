@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat { max-width: 500px; margin: 20px auto; padding: 10px; border: 1px solid #ccc; display: none; }
+        #messages { list-style: none; padding: 0; }
+        #messages li { padding: 5px; border-bottom: 1px solid #ddd; }
+        #input { width: 100%; padding: 10px; }
+    </style>
+</head>
+<body>
+<div id="login">
+    <input id="username" placeholder="Enter your username" autocomplete="off">
+    <button onclick="login()">Join Chat</button>
+</div>
+<div id="chat">
+    <ul id="messages"></ul>
+    <input id="input" autocomplete="off" placeholder="Type a message...">
+</div>
+
+<script>
+    let socket;
+
+    function login() {
+        const username = document.getElementById('username').value.trim();
+        if (!username) return alert('Username is required');
+
+        fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                connectSocket();
+            }
+        });
+    }
+
+    function connectSocket() {
+        socket = io();
+
+        socket.on('connect', () => {
+            console.log('Connected to server!');
+        });
+
+        socket.on('error', (error) => {
+            console.error('Socket Error:', error);
+        });
+
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        socket.on('message', (msg) => {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            messages.appendChild(li);
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value.trim() !== '') {
+                socket.emit('message', input.value);
+                input.value = '';
+            }
+        });
+    }
+</script>
+</body>
+</html>
