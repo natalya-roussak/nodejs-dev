@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/api/transfer';
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NDIxNzQyOX0.K1c6iyeGL6vU8ePQhnE8SeSIAOuIoZoQ4vzO2A2sa9g';
+const TOKEN = '<YOUR_TOKEN>';
 
 const transfer = async (amount: number) => {
     try {
